@@ -1,6 +1,10 @@
+# frozen_string_literal: true
+
 require_relative 'node'
 
 class LinkedList
+  attr_reader :head
+
   def initialize
     @head = nil
   end
@@ -34,11 +38,7 @@ class LinkedList
       current_node = current_node.next_node
     end
 
-    return nodes
-  end
-
-  def head
-    return @head
+    nodes
   end
 
   def tail
@@ -47,26 +47,26 @@ class LinkedList
     current_node = @head
     current_node = current_node.next_node until current_node.next_node.nil?
 
-    return current_node
+    current_node
   end
 
   def at(index)
     return nil if @head.nil?
-    return nil if index < 0
-  
+    return nil if index.negative?
+
     current_node = @head
     current_index = 0
-  
+
     until current_index >= index
       return nil if current_node.next_node.nil?
 
       current_node = current_node.next_node
       current_index += 1
     end
-  
-    return current_node
+
+    current_node
   end
-  
+
   def pop
     return nil if @head.nil?
 
@@ -76,27 +76,28 @@ class LinkedList
 
       return popped_node
     end
-    
+
     current_node = @head
     current_node = current_node.next_node until current_node.next_node.next_node.nil?
-    
+
     popped_node = current_node.next_node
     current_node.next_node = nil
-    
-    return popped_node
+
+    popped_node
   end
 
   def contains?(value)
     return false if @head.nil?
 
     current_node = @head
-    
+
     until current_node.nil?
       return true if current_node.value == value
+
       current_node = current_node.next_node
     end
-    
-    return false
+
+    false
   end
 
   def find(value)
@@ -107,68 +108,70 @@ class LinkedList
 
     until current_node.nil?
       return index if current_node.value == value
-      
+
       current_node = current_node.next_node
       index += 1
     end
 
-    return nil
+    nil
   end
 
   def to_s
-    string_nodes = ""
+    string_nodes = ''
     current_node = @head
-  
+
     until current_node.nil?
       string_nodes << "(#{current_node.value}) -> "
       current_node = current_node.next_node
     end
-  
-    return string_nodes << "nil"
+
+    string_nodes << 'nil'
   end
 
   def insert_at(value, index)
-    return nil if index < 0
+    return nil if index.negative?
 
     added_node = Node.new(value)
-    
-    if index == 0
+
+    if index.zero?
       added_node.next_node = @head
       @head = added_node
     else
       return nil if @head.nil?
 
       current_node = @head
-    
+
       (index - 1).times do
         return nil if current_node.next_node.nil?
+
         current_node = current_node.next_node
       end
-    
+
       added_node.next_node = current_node.next_node
       current_node.next_node = added_node
     end
   end
 
   def remove_at(index)
-    return nil if @head.nil? || index < 0
-  
-    if index == 0
+    return nil if @head.nil? || index.negative?
+
+    if index.zero?
       removed_node = @head
       @head = @head.next_node
       return removed_node
     end
-  
+
     current_node = @head
     (index - 1).times do
       return nil if current_node.next_node.nil?
+
       current_node = current_node.next_node
     end
-  
+
     removed_node = current_node.next_node
     return nil if removed_node.nil?
-  
+
     current_node.next_node = removed_node.next_node
-    return removed_node
+    removed_node
   end
 end
